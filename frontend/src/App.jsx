@@ -489,13 +489,32 @@ function Dashboard({ setPage, setViewReport }) {
     const data=await res.json();
     console.log(data);
 
-    alert("File uploaded successfully");
-    }catch(err){
-      console.error(err);
-      alert("Upload failed");
-    }
-  };
+        setViewReport({
+      startup:file.name,
+      date:new Date().toLocaleString(),
+      overall:70,
+      recommendation:"Generated",
+      confidence:80,
 
+      strengths:[data.report.solution],
+      weaknesses:[data.report.risks],
+
+      categories:[
+        {name:"Problem",score:70,desc:data.report.problem},
+        {name:"Market",score:70,desc:data.report.market},
+        {name:"Summary",score:70,desc:data.report.summary}
+      ],
+
+      recommendations:data.report.recommendation
+    });
+
+    setPage("report");   // go to report page
+
+  }catch(err){
+    console.error(err);
+    alert("Upload failed");
+  }
+};
   const sidebarItems = [
     { icon: "⬆️", label: "New analysis", tab: "upload" },
     { icon: "📋", label: "My reports", tab: "history" },
@@ -565,9 +584,9 @@ function Dashboard({ setPage, setViewReport }) {
                   ))}
                 </div>
                 {done && (
-                  <button className="upload-submit" style={{ marginTop: "1.5rem" }} onClick={() => { setViewReport(MOCK_REPORT); setPage("report"); }}>
-                    View report →
-                  </button>
+                  <button className="upload-submit" style={{ marginTop: "1.5rem" }} onClick={startAnalysis}>
+                  Analyse →
+                </button>
                 )}
               </div>
             )}
